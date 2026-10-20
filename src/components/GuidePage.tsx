@@ -1,7 +1,6 @@
 import { ArrowLeft, ArrowRight, Check, TriangleAlert, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { WhatsappIcon } from '@/components/icons'
-import { Reveal } from '@/components/Reveal'
 import { buttonVariants } from '@/components/ui/button'
 import { contact } from '@/content'
 import { findGuide, guides, type Guide, type GuideSection } from '@/guides'
@@ -43,6 +42,15 @@ function Guide({ g }: { g: Guide }) {
   const tg = t.guide
   const toc = [{ id: 'problema', label: tg.problem }, ...g.sections.map((s) => ({ id: s.id, label: s.label })), { id: 'como-faco', label: g.approach.title }]
   const current = useActiveSection(toc.map((x) => x.id))
+  const tocRef = useRef<HTMLElement>(null)
+
+  // no celular o índice é uma faixa que desliza: mantém a aba atual à vista
+  useEffect(() => {
+    const ol = tocRef.current?.querySelector('ol')
+    const el = ol?.querySelector<HTMLElement>('[aria-current="true"]')
+    if (!ol || !el || ol.scrollWidth <= ol.clientWidth) return
+    ol.scrollTo({ left: el.offsetLeft - 16, behavior: 'smooth' })
+  }, [current])
   const whats = `${contact.whatsapp}?text=${encodeURIComponent(tg.whatsMsg.replace('{x}', g.name))}`
 
   useEffect(() => {
@@ -84,10 +92,14 @@ function Guide({ g }: { g: Guide }) {
         </div>
       </section>
 
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-[13rem_1fr] lg:gap-14">
+      <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] gap-10 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-14">
         {/* índice: barra horizontal no celular, coluna fixa no desktop */}
-        <nav aria-label={tg.onPage} className="lg:sticky lg:top-24 lg:self-start">
-          <p className="mb-3 font-mono text-xs text-dim">
+        <nav
+          ref={tocRef}
+          aria-label={tg.onPage}
+          className="sticky top-16 z-30 -mx-4 min-w-0 border-b border-line/70 bg-ink/90 px-4 pt-3 pb-1 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:top-24 lg:mx-0 lg:self-start lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none"
+        >
+          <p className="mb-3 hidden font-mono text-xs text-dim lg:block">
             <span className="text-volt">{'// '}</span>
             {tg.onPage}
           </p>
@@ -99,7 +111,7 @@ function Guide({ g }: { g: Guide }) {
                   onClick={(e) => {
                     // o hash é a rota do guia, então a rolagem até a seção é feita aqui
                     e.preventDefault()
-                    document.getElementById(x.id)?.scrollIntoView({ behavior: 'smooth' })
+                    document.getElementById(x.id)?.scrollIntoView({ behavior: 'instant' })
                   }}
                   aria-current={current === x.id ? 'true' : undefined}
                   className={cn(
@@ -116,8 +128,7 @@ function Guide({ g }: { g: Guide }) {
         </nav>
 
         <div className="min-w-0 space-y-20 md:space-y-28">
-          <Reveal>
-            <section id="problema" className="scroll-mt-24">
+            <section id="problema" className="scroll-mt-36 lg:scroll-mt-24">
               <SectionHead n={0} label={tg.problem} title={g.problem.title} />
               <div className="grid gap-8 md:grid-cols-[1.2fr_1fr]">
                 <div className="space-y-4 text-[17px] leading-relaxed text-paper/85">
@@ -138,16 +149,12 @@ function Guide({ g }: { g: Guide }) {
                 </div>
               </div>
             </section>
-          </Reveal>
 
           {g.sections.map((s, i) => (
-            <Reveal key={s.id}>
-              <TopicSection s={s} n={i + 1} />
-            </Reveal>
+            <TopicSection key={s.id} s={s} n={i + 1} />
           ))}
 
-          <Reveal>
-            <section id="como-faco" className="scroll-mt-24">
+            <section id="como-faco" className="scroll-mt-36 lg:scroll-mt-24">
               <SectionHead n={g.sections.length + 1} label="./run" title={g.approach.title} />
               <ol className="relative space-y-6 border-l border-line pl-6 sm:pl-8">
                 {g.approach.steps.map((st, i) => (
@@ -176,9 +183,7 @@ function Guide({ g }: { g: Guide }) {
                 </ul>
               </div>
             </section>
-          </Reveal>
 
-          <Reveal>
             <section className="relative overflow-hidden rounded-3xl border border-volt/40 bg-volt/10 p-6 sm:p-10">
               <div aria-hidden className="absolute -right-20 -bottom-24 size-72 rounded-full bg-volt/30 blur-[90px]" />
               <h2 className="relative text-3xl font-bold tracking-[-0.03em] text-balance text-paper sm:text-4xl">{tg.ctaTitle}</h2>
@@ -188,7 +193,6 @@ function Guide({ g }: { g: Guide }) {
                 {tg.ctaButton}
               </a>
             </section>
-          </Reveal>
 
           <section>
             <p className="font-mono text-xs text-dim">
@@ -237,7 +241,7 @@ function SectionHead({ n, label, title }: { n: number; label: string; title: str
 function TopicSection({ s, n }: { s: GuideSection; n: number }) {
   const { t } = useLang()
   return (
-    <section id={s.id} className="scroll-mt-24">
+    <section id={s.id} className="scroll-mt-36 lg:scroll-mt-24">
       <SectionHead n={n} label={s.label.toLowerCase()} title={s.title} />
       <p className="-mt-3 mb-8 max-w-[64ch] text-[17px] leading-relaxed text-paper/80">{s.lead}</p>
 

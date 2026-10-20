@@ -16,13 +16,7 @@ export function useGuideRoute() {
   const [slug, setSlug] = useState(read)
 
   useEffect(() => {
-    const onChange = () => {
-      const next = read()
-      setSlug((prev) => {
-        if (next && next !== prev) window.scrollTo({ top: 0 })
-        return next
-      })
-    }
+    const onChange = () => setSlug(read())
     window.addEventListener('hashchange', onChange)
     return () => window.removeEventListener('hashchange', onChange)
   }, [])

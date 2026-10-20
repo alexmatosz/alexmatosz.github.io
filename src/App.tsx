@@ -1,5 +1,5 @@
 import { MotionConfig } from 'motion/react'
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import { About } from '@/components/About'
 import { Calculator } from '@/components/Calculator'
 import { Activity } from '@/components/Activity'
@@ -22,11 +22,15 @@ import { useGuideRoute } from '@/lib/route'
 export default function App() {
   const guide = useGuideRoute()
 
-  // voltando de um guia por um link de seção ("#services"), rola até ela depois que a home monta
-  useEffect(() => {
-    if (guide) return
+  // troca de página: o guia abre no topo e, voltando por um link de seção ("#services"), a home vai direto até ela.
+  // instant porque o html tem scroll-behavior smooth, e rolar a página inteira devagar parecia que nada tinha aberto
+  useLayoutEffect(() => {
+    if (guide) {
+      window.scrollTo({ top: 0, behavior: 'instant' })
+      return
+    }
     const id = window.location.hash.slice(1)
-    if (id) requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView())
+    if (id) document.getElementById(id)?.scrollIntoView({ behavior: 'instant' })
   }, [guide])
 
   useEffect(() => {
