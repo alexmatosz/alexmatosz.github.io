@@ -1,5 +1,6 @@
 import { motion } from 'motion/react'
 import { ArrowUpRight, GraduationCap, Languages } from 'lucide-react'
+import formatura from '@/assets/alex-formatura.jpg'
 import { Reveal } from '@/components/Reveal'
 import { SectionTitle } from '@/components/SectionTitle'
 import { useLang } from '@/i18n'
@@ -72,22 +73,40 @@ export function Skills() {
                   </div>
                 </Reveal>
               ))}
+              <Reveal delay={0.15}>
+                <div className="rounded-2xl border border-line bg-deep/50 p-5 sm:p-6">
+                  <h3 className="flex items-center gap-2 text-xl font-semibold text-paper">
+                    <Languages className="size-5 text-volt" />
+                    {t.education.languages}
+                  </h3>
+                  <ul className="mt-4 space-y-3">
+                    {t.education.languageItems.map((l) => (
+                      <li key={l.name} className="flex items-baseline justify-between gap-4 border-b border-line/70 pb-3 last:border-0">
+                        <span className="text-paper">{l.name}</span>
+                        <span className="font-mono text-xs text-dim">{l.level}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
             </div>
             <Reveal delay={0.15}>
-              <div className="h-full rounded-2xl border border-line bg-deep/50 p-5 sm:p-6">
-                <h3 className="flex items-center gap-2 text-xl font-semibold text-paper">
-                  <Languages className="size-5 text-volt" />
-                  {t.education.languages}
-                </h3>
-                <ul className="mt-4 space-y-3">
-                  {t.education.languageItems.map((l) => (
-                    <li key={l.name} className="flex items-baseline justify-between gap-4 border-b border-line/70 pb-3 last:border-0">
-                      <span className="text-paper">{l.name}</span>
-                      <span className="font-mono text-xs text-dim">{l.level}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <figure className="group">
+                <div className="overflow-hidden rounded-2xl border border-line">
+                  <img
+                    src={formatura}
+                    alt={t.education.photoAlt}
+                    className="aspect-[4/5] w-full object-cover object-[50%_20%] transition-transform duration-700 group-hover:scale-[1.04]"
+                    loading="lazy"
+                    width={720}
+                    height={1080}
+                  />
+                </div>
+                <figcaption className="mt-3 font-mono text-xs text-dim">
+                  <span className="text-volt">{'// '}</span>
+                  {t.education.photoCaption}
+                </figcaption>
+              </figure>
             </Reveal>
           </div>
         </div>

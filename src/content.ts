@@ -177,6 +177,8 @@ const pt = {
       },
     ],
     visit: 'ver o curso',
+    photoAlt: 'Alexsandro de beca e capelo azul, segurando o canudo na formatura do IFC',
+    photoCaption: 'Formatura no IFC, 2024',
     languages: 'Idiomas',
     languageItems: [
       { name: 'Português', level: 'nativo' },
@@ -438,6 +440,8 @@ const en: Content = {
       },
     ],
     visit: 'see the program',
+    photoAlt: 'Alexsandro in a blue graduation gown and cap, holding his diploma at the IFC graduation',
+    photoCaption: 'IFC graduation, 2024',
     languages: 'Languages',
     languageItems: [
       { name: 'Portuguese', level: 'native' },
