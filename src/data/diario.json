@@ -1,0 +1,10 @@
+[
+  {
+    "data": "2026-10-20",
+    "titulo": "Portfólio novo no ar",
+    "texto": "Construí este site com React, Tailwind e Motion. O diário puxa as entradas de uma planilha do Google Sheets e o calendário de commits vem direto da API do GitHub, atualizado todo dia por um GitHub Actions.",
+    "tag": "portfólio",
+    "link": "",
+    "imagem": ""
+  }
+]
