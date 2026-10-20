@@ -33,11 +33,10 @@ O mesmo workflow roda **todo dia às 06:00 (Brasília)**, puxa os dados novos do
 
 ## Diário de dev (Google Sheets)
 
-1. Crie uma planilha com as colunas `data, titulo, texto, tag, link, imagem` (modelo em `docs/diario-modelo.csv`).
-   - `data`: `2026-10-20` ou `20/10/2026` · `link`: URL do post no LinkedIn (opcional) · `imagem`: URL de uma imagem (opcional).
-2. No Google Sheets: **Arquivo → Compartilhar → Publicar na Web** → escolha a aba e o formato **CSV** → Publicar.
-3. Cole o link gerado em `DIARIO_CSV_URL`, no arquivo `src/config.ts`, e faça o deploy.
+O diário lê a planilha **"Diário de dev — portfólio"** (ID em `src/config.ts`), com as colunas
+`data, titulo, texto, tag, link, imagem` (modelo em `docs/diario-modelo.csv`).
 
-Depois disso, cada linha nova na planilha aparece no site em poucos minutos, sem deploy
-(o Google pode levar até ~5 min para atualizar o CSV publicado).
-Se a planilha estiver fora do ar, o site mostra as entradas de `src/data/diario.json`.
+- `data`: `2026-10-20` ou `20/10/2026` · `link`: URL do post no LinkedIn (opcional) · `imagem`: URL de uma imagem (opcional).
+- A planilha precisa estar em **Compartilhar → Qualquer pessoa com o link → Leitor**.
+- Cada linha nova aparece no site ao recarregar a página, sem deploy.
+- Se a planilha estiver inacessível, o site mostra as entradas de `src/data/diario.json`.

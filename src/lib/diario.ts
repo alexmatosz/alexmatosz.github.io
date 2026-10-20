@@ -68,8 +68,9 @@ const ordenar = (e: Entrada[]) => [...e].sort((a, b) => b.data.localeCompare(a.d
 
 /** Lê o diário da planilha publicada; se falhar, usa as entradas salvas no repositório. */
 export function useDiario(): Estado {
-  const [estado, setEstado] = useState<Estado>(() =>
-    DIARIO_CSV_URL ? { entradas: [], status: 'carregando' } : { entradas: ordenar(salvas), status: 'ok' },
+  const [estado, setEstado] = useState<Estado>(
+    // começa já com as entradas salvas; a planilha substitui quando responder
+    () => ({ entradas: ordenar(salvas), status: 'ok' }),
   )
 
   useEffect(() => {
@@ -80,9 +81,13 @@ export function useDiario(): Estado {
         if (!r.ok) throw new Error(`HTTP ${r.status}`)
         return r.text()
       })
-      .then((csv) => setEstado({ entradas: ordenar(paraEntradas(parseCsv(csv))), status: 'ok' }))
+      .then((csv) => {
+        const entradas = paraEntradas(parseCsv(csv))
+        if (entradas.length) setEstado({ entradas: ordenar(entradas), status: 'ok' })
+      })
       .catch((err) => {
-        if (err.name !== 'AbortError') setEstado({ entradas: ordenar(salvas), status: 'erro' })
+        // planilha fora do ar ou não compartilhada: segue com as entradas salvas
+        if (err.name !== 'AbortError') console.warn('Diário: usando entradas salvas.', err)
       })
     return () => ctrl.abort()
   }, [])
