@@ -2,6 +2,7 @@ import { motion, useMotionTemplate, useMotionValue } from 'motion/react'
 import type { PointerEvent, ReactNode } from 'react'
 import { ChannelHub } from '@/components/Channels'
 import { Reveal } from '@/components/Reveal'
+import { ScrollTilt } from '@/components/Scroll'
 import { SectionTitle } from '@/components/SectionTitle'
 import { Badge } from '@/components/ui/badge'
 import { useLang } from '@/i18n'
@@ -16,7 +17,7 @@ export function Projects() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <SectionTitle command={p.title} intro={p.intro} />
 
-        <Reveal>
+        <ScrollTilt>
           <Spotlight className="rounded-3xl">
             <article className="grid gap-10 p-6 sm:p-10 lg:grid-cols-[1.15fr_1fr] lg:gap-12 [&>*]:min-w-0">
               <div>
@@ -52,7 +53,7 @@ export function Projects() {
               <ChannelHub integratedLabel={f.hub.integrated} operatedLabel={f.hub.operated} />
             </article>
           </Spotlight>
-        </Reveal>
+        </ScrollTilt>
 
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           {p.others.map((o, i) => (

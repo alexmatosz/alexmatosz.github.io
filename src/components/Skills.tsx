@@ -2,6 +2,7 @@ import { motion } from 'motion/react'
 import { ArrowUpRight, GraduationCap, Languages } from 'lucide-react'
 import formatura from '@/assets/alex-formatura.jpg'
 import { Reveal } from '@/components/Reveal'
+import { ParallaxImage } from '@/components/Scroll'
 import { SectionTitle } from '@/components/SectionTitle'
 import { useLang } from '@/i18n'
 
@@ -91,13 +92,12 @@ export function Skills() {
               </Reveal>
             </div>
             <Reveal delay={0.15}>
-              <figure className="group">
+              <figure>
                 <div className="overflow-hidden rounded-2xl border border-line">
-                  <img
+                  <ParallaxImage
                     src={formatura}
                     alt={t.education.photoAlt}
-                    className="aspect-[4/5] w-full object-cover object-[50%_20%] transition-transform duration-700 group-hover:scale-[1.04]"
-                    loading="lazy"
+                    className="aspect-[4/5] w-full object-cover object-[50%_20%]"
                     width={720}
                     height={1080}
                   />

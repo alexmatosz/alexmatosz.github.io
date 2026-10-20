@@ -154,10 +154,7 @@
   border: 5px solid var(--volt);
 }
 
-/* faixa de logos e órbitas dos canais */
-.marquee {
-  animation: marquee 32s linear infinite;
-}
+/* órbitas dos canais */
 .orbit-slow {
   animation: orbit 60s linear infinite;
 }
@@ -170,11 +167,6 @@
   animation-direction: reverse;
 }
 
-@keyframes marquee {
-  to {
-    transform: translateX(-100%);
-  }
-}
 @keyframes orbit {
   to {
     transform: rotate(360deg);
@@ -197,7 +189,6 @@
     scroll-behavior: auto;
   }
   .caret::after,
-  .marquee,
   .orbit-slow,
   .orbit-slow-rev {
     animation: none;

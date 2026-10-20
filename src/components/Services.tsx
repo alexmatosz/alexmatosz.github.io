@@ -1,7 +1,7 @@
 import { motion } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
 import { useState, type KeyboardEvent } from 'react'
-import { Reveal } from '@/components/Reveal'
+import { ScrollTilt } from '@/components/Scroll'
 import { SectionTitle } from '@/components/SectionTitle'
 import { buttonVariants } from '@/components/ui/button'
 import { guides } from '@/guides'
@@ -30,7 +30,7 @@ export function Services() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <SectionTitle command={s.title} intro={s.intro} />
 
-        <Reveal>
+        <ScrollTilt>
           <div className="grid gap-4 lg:grid-cols-[19rem_1fr] lg:gap-6">
             <div role="tablist" aria-orientation="vertical" onKeyDown={onKey} className="grid grid-cols-2 content-start gap-2 sm:gap-3 lg:grid-cols-1">
               {guides.map((x, i) => {
@@ -116,7 +116,7 @@ export function Services() {
               </div>
             </div>
           </div>
-        </Reveal>
+        </ScrollTilt>
       </div>
     </section>
   )

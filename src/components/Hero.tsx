@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'motion/react'
+import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
 import { ArrowDown, Download, MapPin } from 'lucide-react'
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import retrato from '@/assets/alex-retrato.jpg'
@@ -21,19 +21,30 @@ export function Hero() {
     return () => window.clearTimeout(id)
   }, [shown, booted])
 
+  // saindo do topo: texto sobe e some, foto desce e encolhe, o brilho fica para trás (camadas em velocidades diferentes)
+  const sectionRef = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] })
+  const textY = useTransform(scrollYProgress, [0, 1], [0, -140])
+  const textOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
+  const photoY = useTransform(scrollYProgress, [0, 1], [0, 90])
+  const photoScale = useTransform(scrollYProgress, [0, 1], [1, 0.88])
+  const glowY = useTransform(scrollYProgress, [0, 1], [0, 260])
+  const exit = (style: Record<string, unknown>) => (reduce ? undefined : style)
+
   return (
-    <section id="top" className="relative isolate flex min-h-svh items-center overflow-hidden pt-24 pb-16">
+    <section ref={sectionRef} id="top" className="relative isolate flex min-h-svh items-center overflow-hidden pt-24 pb-16">
       <div
         aria-hidden
         className="bg-dots absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_70%_60%_at_60%_40%,black,transparent)]"
       />
-      <div
+      <motion.div
         aria-hidden
+        style={exit({ y: glowY })}
         className="absolute top-1/4 right-[-10%] -z-10 size-[42rem] rounded-full bg-volt/25 blur-[140px]"
       />
 
       <div className="mx-auto grid w-full max-w-6xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
-        <div>
+        <motion.div style={exit({ y: textY, opacity: textOpacity })}>
           <div className="mb-8 min-h-[6.5rem] font-mono text-[13px] leading-relaxed sm:text-sm" aria-hidden>
             {t.boot.slice(0, shown).map((line, i) => (
               <motion.p
@@ -98,15 +109,17 @@ export function Hero() {
               {t.hero.location}
             </p>
           </motion.div>
-        </div>
+        </motion.div>
 
-        <motion.div
-          initial={reduce ? false : { opacity: 0, scale: 0.94, rotate: -2 }}
-          animate={booted ? { opacity: 1, scale: 1, rotate: 0 } : undefined}
-          transition={{ delay: 0.35, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto w-full max-w-sm lg:max-w-[25rem]"
-        >
-          <PhotoWindow lang={lang} />
+        <motion.div style={exit({ y: photoY, scale: photoScale })}>
+          <motion.div
+            initial={reduce ? false : { opacity: 0, scale: 0.94, rotate: -2 }}
+            animate={booted ? { opacity: 1, scale: 1, rotate: 0 } : undefined}
+            transition={{ delay: 0.35, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto w-full max-w-sm lg:max-w-[25rem]"
+          >
+            <PhotoWindow lang={lang} />
+          </motion.div>
         </motion.div>
       </div>
 

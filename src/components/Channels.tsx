@@ -1,3 +1,15 @@
+import {
+  motion,
+  useAnimationFrame,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useVelocity,
+} from 'motion/react'
+import { useRef } from 'react'
 import amazon from '@/assets/logos/amazon.svg'
 import bling from '@/assets/logos/bling.svg'
 import magalu from '@/assets/logos/magalu.svg'
@@ -29,9 +41,31 @@ function Tile({ c, className }: { c: Channel; className?: string }) {
   )
 }
 
-/** Faixa de logos que desliza sem parar (pausa com o mouse em cima). */
+// uma volta completa da faixa leva LOOP_S segundos com a página parada
+const LOOP_S = 32
+
+/** Faixa de logos que desliza sem parar: acelera com a rolagem, inverte rolando para cima e pausa com o mouse em cima. */
 export function ChannelMarquee() {
   const { t } = useLang()
+  const reduce = useReducedMotion()
+  const x = useMotionValue(0)
+  const { scrollY } = useScroll()
+  const velocity = useSpring(useVelocity(scrollY), { damping: 50, stiffness: 400 })
+  const boost = useTransform(velocity, [-1000, 0, 1000], [-4, 0, 4], { clamp: false })
+  const dir = useRef(1)
+  const paused = useRef(false)
+  const transform = useMotionTemplate`translateX(${x}%)`
+
+  useAnimationFrame((_, delta) => {
+    if (reduce || paused.current) return
+    const b = boost.get()
+    if (b < 0) dir.current = -1
+    else if (b > 0) dir.current = 1
+    const step = dir.current * (100 / LOOP_S) * (delta / 1000) * (1 + Math.abs(b))
+    // mantém x entre -100% e 0: ao fim de uma cópia, volta ao início sem salto visível
+    x.set(-((((-x.get() + step) % 100) + 100) % 100))
+  })
+
   // duas cópias com pelo menos a largura da tela: a segunda entra no lugar da primeira sem deixar buraco
   return (
     <section aria-label={t.channels.label} className="relative border-y border-line/70 bg-deep/40 py-6 sm:py-8">
@@ -39,19 +73,24 @@ export function ChannelMarquee() {
         <span className="text-volt">{'// '}</span>
         {t.channels.label}
       </p>
-      <div className="group mx-auto flex max-w-7xl overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]">
+      <div
+        onPointerEnter={(e) => (paused.current = e.pointerType === 'mouse')}
+        onPointerLeave={() => (paused.current = false)}
+        className="mx-auto flex max-w-7xl overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]"
+      >
         {[0, 1].map((copy) => (
-          <ul
+          <motion.ul
             key={copy}
             aria-hidden={copy === 1}
-            className="marquee flex min-w-full shrink-0 items-center justify-around gap-3 pr-3 group-hover:[animation-play-state:paused] sm:gap-4 sm:pr-4"
+            style={{ transform }}
+            className="flex min-w-full shrink-0 items-center justify-around gap-3 pr-3 sm:gap-4 sm:pr-4"
           >
             {channels.map((c) => (
               <li key={c.name}>
                 <Tile c={c} className="h-11 px-3 sm:h-14 sm:px-4" />
               </li>
             ))}
-          </ul>
+          </motion.ul>
         ))}
       </div>
     </section>

@@ -1,5 +1,6 @@
 import evento from '@/assets/alex-evento.jpg'
 import { Reveal } from '@/components/Reveal'
+import { ParallaxImage } from '@/components/Scroll'
 import { SectionTitle } from '@/components/SectionTitle'
 import { useLang } from '@/i18n'
 
@@ -13,13 +14,12 @@ export function About() {
 
         <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16 [&>*]:min-w-0">
           <Reveal>
-            <figure className="group">
+            <figure>
               <div className="overflow-hidden rounded-2xl border border-line">
-                <img
+                <ParallaxImage
                   src={evento}
                   alt={lang === 'pt' ? 'Alexsandro no evento Tray Experience Varejo, em frente ao painel com a marca da Monvatti' : 'Alexsandro at the Tray Experience Varejo event, in front of the Monvatti banner'}
-                  className="aspect-[4/3] w-full object-cover object-[50%_40%] transition-transform duration-700 group-hover:scale-[1.04]"
-                  loading="lazy"
+                  className="aspect-[4/3] w-full object-cover object-[50%_40%]"
                   width={1600}
                   height={1066}
                 />
