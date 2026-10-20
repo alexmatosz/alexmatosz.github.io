@@ -172,7 +172,7 @@
 
 @keyframes marquee {
   to {
-    transform: translateX(calc(-50% - 0.5rem));
+    transform: translateX(-100%);
   }
 }
 @keyframes orbit {

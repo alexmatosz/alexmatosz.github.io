@@ -23,8 +23,8 @@ const channels: Channel[] = [
 function Tile({ c, className }: { c: Channel; className?: string }) {
   return (
     <span className={cn('flex items-center gap-2.5 rounded-2xl bg-white px-4 shadow-[0_8px_30px_-12px_rgba(47,107,255,0.6)]', className)}>
-      <img src={c.src} alt={c.wordmark ? c.name : ''} className={cn('w-auto object-contain', c.wordmark ? 'h-6 max-w-24' : 'h-7')} />
-      {!c.wordmark && <span className="font-sans text-sm font-semibold whitespace-nowrap text-[#1b2240]">{c.name}</span>}
+      <img src={c.src} alt={c.wordmark ? c.name : ''} className={cn('w-auto object-contain', c.wordmark ? 'h-5 max-w-20 sm:h-6 sm:max-w-24' : 'h-6 sm:h-7')} />
+      {!c.wordmark && <span className="font-sans text-xs font-semibold whitespace-nowrap text-[#1b2240] sm:text-sm">{c.name}</span>}
     </span>
   )
 }
@@ -32,21 +32,27 @@ function Tile({ c, className }: { c: Channel; className?: string }) {
 /** Faixa de logos que desliza sem parar (pausa com o mouse em cima). */
 export function ChannelMarquee() {
   const { t } = useLang()
-  const row = [...channels, ...channels]
+  // duas cópias com pelo menos a largura da tela: a segunda entra no lugar da primeira sem deixar buraco
   return (
-    <section aria-label={t.channels.label} className="relative border-y border-line/70 bg-deep/40 py-8">
-      <p className="mx-auto mb-6 max-w-6xl px-4 font-mono text-xs text-dim sm:px-6">
+    <section aria-label={t.channels.label} className="relative border-y border-line/70 bg-deep/40 py-6 sm:py-8">
+      <p className="mx-auto mb-5 max-w-6xl px-4 text-center font-mono text-xs text-dim sm:mb-6 sm:px-6">
         <span className="text-volt">{'// '}</span>
         {t.channels.label}
       </p>
-      <div className="group relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
-        <ul className="marquee flex w-max gap-4 group-hover:[animation-play-state:paused]">
-          {row.map((c, i) => (
-            <li key={i} aria-hidden={i >= channels.length}>
-              <Tile c={c} className="h-14" />
-            </li>
-          ))}
-        </ul>
+      <div className="group mx-auto flex max-w-7xl overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]">
+        {[0, 1].map((copy) => (
+          <ul
+            key={copy}
+            aria-hidden={copy === 1}
+            className="marquee flex min-w-full shrink-0 items-center justify-around gap-3 pr-3 group-hover:[animation-play-state:paused] sm:gap-4 sm:pr-4"
+          >
+            {channels.map((c) => (
+              <li key={c.name}>
+                <Tile c={c} className="h-11 px-3 sm:h-14 sm:px-4" />
+              </li>
+            ))}
+          </ul>
+        ))}
       </div>
     </section>
   )

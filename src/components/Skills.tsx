@@ -1,5 +1,5 @@
 import { motion } from 'motion/react'
-import { GraduationCap, Languages } from 'lucide-react'
+import { ArrowUpRight, GraduationCap, Languages } from 'lucide-react'
 import { Reveal } from '@/components/Reveal'
 import { SectionTitle } from '@/components/SectionTitle'
 import { useLang } from '@/i18n'
@@ -55,10 +55,19 @@ export function Skills() {
                 <Reveal key={e.course} delay={i * 0.08}>
                   <div className="flex gap-4 rounded-2xl border border-line bg-deep/50 p-5 sm:p-6">
                     <GraduationCap className="mt-1 size-6 shrink-0 text-volt" />
-                    <div>
-                      <h3 className="text-xl font-semibold text-paper">{e.course}</h3>
+                    <div className="min-w-0">
+                      <h3 className="text-xl font-semibold text-balance text-paper">{e.course}</h3>
                       <p className="text-glow">{e.school}</p>
                       <p className="mt-1 font-mono text-xs text-dim">{e.status}</p>
+                      <a
+                        href={e.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="group mt-3 inline-flex items-center gap-1.5 font-mono text-xs text-volt transition-colors hover:text-paper"
+                      >
+                        {t.education.visit}
+                        <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </a>
                     </div>
                   </div>
                 </Reveal>

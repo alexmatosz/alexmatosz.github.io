@@ -7,7 +7,7 @@ import { useLang } from '@/i18n'
 import { cn } from '@/lib/utils'
 import type { Lang } from '@/content'
 
-const sections = ['about', 'experience', 'projects', 'stack', 'activity', 'contact'] as const
+const sections = ['about', 'experience', 'projects', 'services', 'stack', 'activity', 'contact'] as const
 
 export function Header() {
   const { t, lang, switchLang } = useLang()
@@ -24,18 +24,18 @@ export function Header() {
       )}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <a href="#top" className="group font-mono text-sm text-paper">
+        <a href="#top" className="group font-mono text-sm whitespace-nowrap text-paper">
           <span className="text-volt">~/</span>
           alexsandro
           <span className="caret" />
         </a>
 
-        <nav aria-label="Principal" className="hidden items-center gap-1 md:flex">
+        <nav aria-label="Principal" className="hidden items-center gap-0.5 lg:flex">
           {sections.map((s) => (
             <a
               key={s}
               href={`#${s}`}
-              className="rounded-md px-3 py-2 font-mono text-sm text-dim transition-colors hover:bg-deep hover:text-paper"
+              className="rounded-md px-2 py-2 font-mono text-sm whitespace-nowrap text-dim transition-colors hover:bg-deep hover:text-paper"
             >
               <span className="text-volt/70">./</span>
               {t.nav[s]}
@@ -49,10 +49,11 @@ export function Header() {
             onClick={openTerminal}
             aria-label={t.terminal.open}
             title={`${t.terminal.open} (Ctrl+K)`}
-            className="hidden h-9 items-center gap-2 rounded-lg border border-line px-2.5 font-mono text-xs text-dim transition-colors hover:border-volt hover:text-paper lg:flex"
+            className="hidden h-9 items-center gap-2 rounded-lg border border-line px-2.5 font-mono text-xs whitespace-nowrap text-dim transition-colors hover:border-volt hover:text-paper xl:flex"
           >
             <TerminalSquare className="size-4 text-volt" />
-            <kbd className="font-mono">Ctrl K</kbd>
+            <span className="hidden 2xl:inline">{t.terminal.label}</span>
+            <kbd className="rounded border border-line px-1 font-mono text-[10px] text-dim/80">Ctrl K</kbd>
           </button>
           <LangToggle lang={lang} onChange={switchLang} />
           <a
@@ -68,7 +69,7 @@ export function Header() {
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
             aria-label={t.nav.menu}
-            className="grid size-9 place-items-center rounded-lg text-paper hover:bg-deep md:hidden"
+            className="grid size-9 place-items-center rounded-lg text-paper hover:bg-deep lg:hidden"
           >
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
@@ -82,7 +83,7 @@ export function Header() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden md:hidden"
+            className="overflow-hidden lg:hidden"
           >
             <div className="flex flex-col px-4 pb-4">
               {sections.map((s) => (

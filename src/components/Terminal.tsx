@@ -11,6 +11,7 @@ const SECTIONS: Record<string, string> = {
   sobre: 'about', about: 'about', whoami: 'about',
   experiencia: 'experience', experience: 'experience',
   projetos: 'projects', projects: 'projects',
+  'como-opero': 'services', 'how-i-work': 'services', servicos: 'services', services: 'services', guias: 'services',
   stack: 'stack', skills: 'stack',
   atividade: 'activity', activity: 'activity', diario: 'activity',
   calculadora: 'calculator', calculator: 'calculator',
@@ -58,7 +59,12 @@ export function Terminal() {
 
   const go = useCallback((id: string) => {
     setOpen(false)
-    window.setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 150)
+    window.setTimeout(() => {
+      const el = document.getElementById(id)
+      // dentro de um guia a seção não existe: volta para a home, que rola até ela
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
+      else window.location.hash = id
+    }, 150)
   }, [])
 
   const openUrl = (url: string, label: string) => {

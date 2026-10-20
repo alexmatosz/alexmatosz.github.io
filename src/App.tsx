@@ -7,16 +7,28 @@ import { ChannelMarquee } from '@/components/Channels'
 import { Contact } from '@/components/Contact'
 import { Experience } from '@/components/Experience'
 import { Footer } from '@/components/Footer'
+import { GuidePage } from '@/components/GuidePage'
 import { Header } from '@/components/Header'
 import { Hero } from '@/components/Hero'
 import { Projects } from '@/components/Projects'
+import { Services } from '@/components/Services'
 import { Skills } from '@/components/Skills'
 import { Terminal } from '@/components/Terminal'
 import { WhatsappFab } from '@/components/WhatsappFab'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { LangProvider } from '@/i18n'
+import { useGuideRoute } from '@/lib/route'
 
 export default function App() {
+  const guide = useGuideRoute()
+
+  // voltando de um guia por um link de seção ("#services"), rola até ela depois que a home monta
+  useEffect(() => {
+    if (guide) return
+    const id = window.location.hash.slice(1)
+    if (id) requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView())
+  }, [guide])
+
   useEffect(() => {
     // easter egg para quem abre o DevTools
     console.log(
@@ -37,17 +49,22 @@ export default function App() {
             Pular para o conteúdo
           </a>
           <Header />
-          <main>
-            <Hero />
-            <ChannelMarquee />
-            <About />
-            <Experience />
-            <Projects />
-            <Skills />
-            <Activity />
-            <Calculator />
-            <Contact />
-          </main>
+          {guide ? (
+            <GuidePage slug={guide} />
+          ) : (
+            <main>
+              <Hero />
+              <ChannelMarquee />
+              <About />
+              <Experience />
+              <Projects />
+              <Services />
+              <Skills />
+              <Activity />
+              <Calculator />
+              <Contact />
+            </main>
+          )}
           <Footer />
           <WhatsappFab />
           <Terminal />
