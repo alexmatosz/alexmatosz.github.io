@@ -2,6 +2,7 @@ import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTran
 import { ArrowDown, Download, MapPin } from 'lucide-react'
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import retrato from '@/assets/alex-retrato.jpg'
+import { ScrollTilt, useWide } from '@/components/Scroll'
 import { buttonVariants } from '@/components/ui/button'
 import { useLang } from '@/i18n'
 import { cn } from '@/lib/utils'
@@ -21,15 +22,17 @@ export function Hero() {
     return () => window.clearTimeout(id)
   }, [shown, booted])
 
-  // saindo do topo: texto sobe e some, foto desce e encolhe, o brilho fica para trás (camadas em velocidades diferentes)
+  // saindo do topo: texto sobe e some, foto desce e encolhe, o brilho fica para trás (camadas em velocidades diferentes).
+  // só com as duas colunas lado a lado; no celular a foto fica embaixo do texto e o efeito apagaria o que ainda está sendo lido
+  const wide = useWide()
   const sectionRef = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] })
   const textY = useTransform(scrollYProgress, [0, 1], [0, -140])
-  const textOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
+  const textOpacity = useTransform(scrollYProgress, [0.15, 0.85], [1, 0])
   const photoY = useTransform(scrollYProgress, [0, 1], [0, 90])
   const photoScale = useTransform(scrollYProgress, [0, 1], [1, 0.88])
   const glowY = useTransform(scrollYProgress, [0, 1], [0, 260])
-  const exit = (style: Record<string, unknown>) => (reduce ? undefined : style)
+  const exit = (style: Record<string, unknown>) => (reduce || !wide ? undefined : style)
 
   return (
     <section ref={sectionRef} id="top" className="relative isolate flex min-h-svh items-center overflow-hidden pt-24 pb-16">
@@ -118,7 +121,13 @@ export function Hero() {
             transition={{ delay: 0.35, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             className="mx-auto w-full max-w-sm lg:max-w-[25rem]"
           >
-            <PhotoWindow lang={lang} />
+            {wide ? (
+              <PhotoWindow lang={lang} />
+            ) : (
+              <ScrollTilt>
+                <PhotoWindow lang={lang} />
+              </ScrollTilt>
+            )}
           </motion.div>
         </motion.div>
       </div>
