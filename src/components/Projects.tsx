@@ -4,7 +4,6 @@ import { ChannelHub } from '@/components/Channels'
 import { Reveal } from '@/components/Reveal'
 import { ScrollTilt } from '@/components/Scroll'
 import { SectionTitle } from '@/components/SectionTitle'
-import { Badge } from '@/components/ui/badge'
 import { useLang } from '@/i18n'
 
 export function Projects() {
@@ -87,9 +86,9 @@ function StackList({ label, items }: { label: string; items: string[] }) {
       <ul className="flex flex-wrap gap-2">
         {items.map((s) => (
           <li key={s}>
-            <Badge variant="outline" className="h-6 border-line bg-ink/60 px-2.5 font-mono text-[11px] text-paper/80">
+            <span className="inline-flex h-6 items-center rounded-4xl border border-line bg-ink/60 px-2.5 font-mono text-[11px] whitespace-nowrap text-paper/80">
               {s}
-            </Badge>
+            </span>
           </li>
         ))}
       </ul>

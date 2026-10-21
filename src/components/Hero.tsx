@@ -7,18 +7,19 @@ import { buttonVariants } from '@/components/ui/button'
 import { useLang } from '@/i18n'
 import { cn } from '@/lib/utils'
 
-const LINE_MS = 420
+const LINE_MS = 220
 
 export function Hero() {
   const { t, lang } = useLang()
   const reduce = useReducedMotion()
-  // quantas linhas do boot já apareceram; só roda na primeira carga
+  // quantas linhas do boot já apareceram; só roda na primeira carga.
+  // é enfeite: nome, descrição e foto entram junto, sem esperar o boot terminar
   const [shown, setShown] = useState(reduce ? t.boot.length : 0)
   const booted = shown >= t.boot.length
 
   useEffect(() => {
     if (booted) return
-    const id = window.setTimeout(() => setShown((n) => n + 1), shown === 0 ? 250 : LINE_MS)
+    const id = window.setTimeout(() => setShown((n) => n + 1), shown === 0 ? 120 : LINE_MS)
     return () => window.clearTimeout(id)
   }, [shown, booted])
 
@@ -72,19 +73,18 @@ export function Hero() {
 
           <h1 className="sr-only">Alexsandro Joaquim De Matos — {t.hero.role}</h1>
           <div aria-hidden className="font-heading leading-[0.88] font-bold tracking-[-0.045em]">
-            <SplitWord text="Alexsandro" start={booted} delay={0} className="text-[clamp(3.2rem,13vw,7.25rem)] text-paper" />
+            <SplitWord text="Alexsandro" delay={0} className="text-[clamp(3.2rem,13vw,7.25rem)] text-paper" />
             <SplitWord
               text="Joaquim De Matos"
-              start={booted}
-              delay={0.25}
+              delay={0.15}
               className="mt-1 text-[clamp(1.9rem,6.4vw,3.9rem)] font-light tracking-[-0.03em] text-glow"
             />
           </div>
 
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 16 }}
-            animate={booted ? { opacity: 1, y: 0 } : undefined}
-            transition={{ delay: 0.75, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <p className="mt-8 font-mono text-sm text-paper sm:text-base">
               <span className="text-volt">{'<'}</span>
@@ -117,8 +117,8 @@ export function Hero() {
         <motion.div style={exit({ y: photoY, scale: photoScale })}>
           <motion.div
             initial={reduce ? false : { opacity: 0, scale: 0.94, rotate: -2 }}
-            animate={booted ? { opacity: 1, scale: 1, rotate: 0 } : undefined}
-            transition={{ delay: 0.35, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ delay: 0.1, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             className="mx-auto w-full max-w-sm lg:max-w-[25rem]"
           >
             {wide ? (
@@ -145,7 +145,7 @@ export function Hero() {
   )
 }
 
-function SplitWord({ text, start, delay, className }: { text: string; start: boolean; delay: number; className?: string }) {
+function SplitWord({ text, delay, className }: { text: string; delay: number; className?: string }) {
   const reduce = useReducedMotion()
   let index = 0
   // cada palavra fica inteira na mesma linha; as letras sobem uma a uma
@@ -160,7 +160,7 @@ function SplitWord({ text, start, delay, className }: { text: string; start: boo
                 key={i}
                 className="inline-block"
                 initial={reduce ? false : { y: '110%' }}
-                animate={start ? { y: '0%' } : undefined}
+                animate={{ y: '0%' }}
                 transition={{ delay: delay + i * 0.028, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               >
                 {ch}
